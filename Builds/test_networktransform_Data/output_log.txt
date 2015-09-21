@@ -24,14 +24,5 @@ desktop: 2560x1440 105Hz; virtual: 4480x1440 at 0,0
 <RI> Initialized touch support.
 Platform assembly: E:\Documents\GitHub\multiplayer_topdown\Builds\test_networktransform_Data\Managed\System.dll (this message is harmless)
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 3f64 -> priority: 1 
-  Thread -> id: 3f5c -> priority: 1 
-Log: connection {1} has been disconnected by timeout; address {::ffff:127.0.0.1:7777}
-aissp: time {107048} lastRecTime {105002} DisTme {2000}, rtt {0} 
- 
-(Filename:  Line: 1848)
-
-UNet Client Disconnect Error: Timeout
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
-
+  Thread -> id: 35a4 -> priority: 1 
+  Thread -> id: 43ec -> priority: 1 

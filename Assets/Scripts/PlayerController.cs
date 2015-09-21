@@ -21,6 +21,7 @@ public class PlayerController : NetworkBehaviour {
 	void Start () {
 		if (!isLocalPlayer)
 		{
+			cam.GetComponent<Camera>().enabled = false;
 			cam.SetActive(false);
 			this.enabled = false;
 

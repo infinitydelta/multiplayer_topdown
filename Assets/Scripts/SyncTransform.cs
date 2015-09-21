@@ -14,7 +14,7 @@ public class SyncTransform : NetworkBehaviour {
 	float timer = 0;
 
 	Transform thisTransform = null;
-
+	float oldTime = 0;
 	void Awake()
 	{
 		thisTransform = GetComponent<Transform>();
@@ -24,8 +24,8 @@ public class SyncTransform : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
-	}
+		oldTime = Time.time;
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -43,6 +43,10 @@ public class SyncTransform : NetworkBehaviour {
 	[Command]
 	void CmdUpdateTransform(Vector3 pos, Quaternion rot)
 	{
+		
+		float tim = Time.time;
+		print(netId + " time since last call" + (tim - oldTime));
+		oldTime = tim;
 		syncPosition = pos;
 		syncRotation = rot;
 	}
@@ -52,9 +56,10 @@ public class SyncTransform : NetworkBehaviour {
 	{
 		if (isLocalPlayer)
 		{
-			if (timer > 1/tickRate)
+			if (timer > 1f/tickRate)
 			{
 				CmdUpdateTransform(thisTransform.position, thisTransform.rotation);
+				//print("time since last update: " + timer);
 				timer = 0;
 			}
 			timer += Time.deltaTime;
