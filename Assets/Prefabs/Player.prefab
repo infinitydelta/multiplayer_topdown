@@ -75,6 +75,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &169046
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 434638}
+  m_Layer: 0
+  m_Name: mcshooty
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &410468
 Transform:
   m_ObjectHideFlags: 1
@@ -112,6 +127,18 @@ Transform:
   - {fileID: 410468}
   m_Father: {fileID: 450704}
   m_RootOrder: 0
+--- !u!4 &434638
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 169046}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.50100005, y: .263000011, z: -.372999996}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 450704}
+  m_RootOrder: 2
 --- !u!4 &450704
 Transform:
   m_ObjectHideFlags: 1
@@ -119,11 +146,12 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 137624}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: .5, z: 0}
+  m_LocalPosition: {x: .920458674, y: 1.92999995, z: 1.30027676}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 422494}
   - {fileID: 420652}
+  - {fileID: 434638}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!20 &2042532
@@ -321,6 +349,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 138094}
+  ball: {fileID: 150564, guid: b38b9747d19da524895bca3bb1d0aa41, type: 2}
+  muzzle: {fileID: 434638}
   speed: 1
   rotSpeed: 180
 --- !u!114 &11453572
@@ -412,6 +442,10 @@ Prefab:
       propertyPath: m_InterpolateRotation
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: ball
+      value: 
+      objectReference: {fileID: 150564, guid: b38b9747d19da524895bca3bb1d0aa41, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 137624}

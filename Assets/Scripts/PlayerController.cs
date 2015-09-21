@@ -5,6 +5,8 @@ using UnityEngine.Networking;
 public class PlayerController : NetworkBehaviour {
 
 	public GameObject cam;
+	public GameObject ball;
+	public Transform muzzle;
 
 	public float speed = 2;
     public float rotSpeed = 180f;
@@ -52,7 +54,24 @@ public class PlayerController : NetworkBehaviour {
 
 
         Debug.DrawRay(mouseRay.origin, mouseRay.direction * 100, Color.yellow);
+
+
+		if (Input.GetMouseButtonDown(0))
+		{
+			CmdShoot(muzzle.position, thisTransform.rotation);
+		}
+
+
     }
+
+	[Command]
+	void CmdShoot(Vector3 pos, Quaternion rot)
+	{
+		GameObject bullet = Instantiate(ball, pos, rot) as GameObject;
+
+		NetworkServer.Spawn(bullet);
+	}
+
 	void FixedUpdate () {
 		if (Input.GetKey("w"))
 		{
