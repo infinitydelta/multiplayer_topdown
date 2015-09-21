@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 
 public class SyncTransform : NetworkBehaviour {
 
+	public int tickRate = 120;
 
 	[SyncVar]
 	public Vector3 syncPosition;
@@ -51,7 +52,7 @@ public class SyncTransform : NetworkBehaviour {
 	{
 		if (isLocalPlayer)
 		{
-			if (timer > 1/120)
+			if (timer > 1/tickRate)
 			{
 				CmdUpdateTransform(thisTransform.position, thisTransform.rotation);
 				timer = 0;
