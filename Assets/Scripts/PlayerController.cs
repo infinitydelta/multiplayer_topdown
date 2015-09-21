@@ -20,6 +20,7 @@ public class PlayerController : NetworkBehaviour {
 	{
 		thisTransform = GetComponent<Transform>();
 		rb = GetComponent<Rigidbody>();
+		rb.maxAngularVelocity = 1000;
         playerCamera = cam.GetComponent<Camera>();
 	}
 
@@ -77,7 +78,8 @@ public class PlayerController : NetworkBehaviour {
 
 		Vector3.ClampMagnitude(rb.velocity, 10);
 
-        thisTransform.rotation = Quaternion.Euler(0, targetYRotation, 0);
+		//thisTransform.rotation = Quaternion.Euler(0, targetYRotation, 0);
+		rb.rotation = Quaternion.Euler(0, targetYRotation, 0);
 
         //thisTransform.LookAt(mousePosInWorldSpace);
 	}
