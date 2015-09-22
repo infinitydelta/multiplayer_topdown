@@ -35,6 +35,7 @@ public class PlayerController : NetworkBehaviour {
 			this.enabled = false;
 
 		}
+        thisTransform.Translate(new Vector3(0, 2, 0));
 	}
 	
 	// Update is called once per frame
