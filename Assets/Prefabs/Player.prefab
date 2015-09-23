@@ -412,10 +412,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 138094}
+  cameraAnchor: {fileID: 130520}
   ball: {fileID: 150564, guid: b38b9747d19da524895bca3bb1d0aa41, type: 2}
   muzzle: {fileID: 434638}
-  speed: 1
-  rotSpeed: 180
+  maxSpeed: 10
+  accel: 1
+  enableMaxRotationSpeed: 1
+  rotSpeed: 360
 --- !u!114 &11453572
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -563,6 +566,14 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: .866025388
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: rotSpeed
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: cameraAnchor
+      value: 
+      objectReference: {fileID: 130520}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 137624}

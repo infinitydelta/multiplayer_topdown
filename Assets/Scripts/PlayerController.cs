@@ -5,13 +5,15 @@ using UnityEngine.Networking;
 public class PlayerController : NetworkBehaviour {
 
 	public GameObject cam;
+    public GameObject cameraAnchor;
 	public GameObject ball;
 	public Transform muzzle;
 
     public float maxSpeed = 10;
     //public float speed = 2;
     public float accel = 1;
-    public float rotSpeed = 180f;
+    public bool enableMaxRotationSpeed = true;
+    public float rotSpeed = 360f;
 
 	Transform thisTransform = null;
 	Rigidbody rb = null;
@@ -20,6 +22,7 @@ public class PlayerController : NetworkBehaviour {
 
     Vector3 mousePosInWorldSpace;
     float targetYRotation;
+    Vector3 targetRotVector;
     Camera playerCamera;
 
 	void Awake()
@@ -54,6 +57,8 @@ public class PlayerController : NetworkBehaviour {
         {
             mousePosInWorldSpace = hit.point;
             targetYRotation = Mathf.Atan2(-(mousePosInWorldSpace.z - thisTransform.position.z), mousePosInWorldSpace.x - thisTransform.position.x)*Mathf.Rad2Deg;
+            targetRotVector = new Vector3(mousePosInWorldSpace.x - thisTransform.position.x, 0, (mousePosInWorldSpace.z - thisTransform.position.z));
+            targetRotVector.Normalize();
             //Debug.Log(targetYRotation);
         }
 
@@ -67,6 +72,7 @@ public class PlayerController : NetworkBehaviour {
         //get movement input
         inputVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         inputVector = Vector3.ClampMagnitude(inputVector, 1f);
+
     }
 
 	[Command]
@@ -110,12 +116,25 @@ public class PlayerController : NetworkBehaviour {
 		Vector3.ClampMagnitude(rb.velocity, maxSpeed);
 
 		//thisTransform.rotation = Quaternion.Euler(0, targetYRotation, 0);
-		rb.rotation = Quaternion.Euler(0, targetYRotation, 0);
+        if (enableMaxRotationSpeed)
+        {
+            Vector3 newRot = Vector3.RotateTowards(thisTransform.right, targetRotVector, rotSpeed * Mathf.Deg2Rad * Time.deltaTime, 0);
+            rb.rotation = Quaternion.Euler(new Vector3(0, Mathf.Atan2(-newRot.z, newRot.x) * Mathf.Rad2Deg, 0));
+        }
+        else
+        {
+            rb.rotation = Quaternion.Euler(0, targetYRotation, 0);
+        }
+        
+        
 
         //thisTransform.LookAt(mousePosInWorldSpace);
 	}
 
-
+    public Vector3 getMousePosInWorldSpace()
+    {
+        return mousePosInWorldSpace;
+    }
 
 
 }
