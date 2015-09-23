@@ -46,7 +46,6 @@ GameObject:
   - 23: {fileID: 2385322}
   - 54: {fileID: 5452778}
   - 114: {fileID: 11453094}
-  - 114: {fileID: 11452692}
   - 114: {fileID: 11435414}
   - 114: {fileID: 11466918}
   m_Layer: 0
@@ -70,6 +69,8 @@ GameObject:
   - 81: {fileID: 8184706}
   - 114: {fileID: 11489482}
   - 114: {fileID: 11464732}
+  - 114: {fileID: 11446434}
+  - 114: {fileID: 11415114}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -165,7 +166,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 137624}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -22.3221207, y: 37.8066177, z: -13.797802}
+  m_LocalPosition: {x: 6.0999999, y: 1.5, z: 8.39999962}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 422494}
@@ -354,6 +355,46 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 138094}
   m_Enabled: 1
+--- !u!114 &11415114
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 138094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 238ad967054ecaa4db22b551db68c11b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: .100000001
+  speed: 1
+  magnitude: .5
+  test: 0
+  dampingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: .100000001
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: .649999976
+      value: 1
+      inSlope: -.0566244125
+      outSlope: -.0566244125
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
 --- !u!114 &11435414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -386,20 +427,25 @@ MonoBehaviour:
     i15: 233
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &11452692
+--- !u!114 &11446434
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 137624}
-  m_Enabled: 0
+  m_GameObject: {fileID: 138094}
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3481d0e08f51db9498bc1f01a5c01fc9, type: 3}
+  m_Script: {fileID: 11500000, guid: 76b5ec6153a1d55438228df10fe66844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tickRate: 29
-  syncPosition: {x: 0, y: 0, z: 0}
-  syncRotation: {x: 0, y: 0, z: 0, w: 0}
+  distanceFog: 1
+  excludeFarPixels: 1
+  useRadialDistance: 0
+  heightFog: 1
+  height: 1
+  heightDensity: 4.75
+  startDistance: 0
+  fogShader: {fileID: 4800000, guid: 70d8568987ac0499f952b54c7c13e265, type: 3}
 --- !u!114 &11453094
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -411,13 +457,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71b7ffa9a0750a14b837936bc8146abd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  editorOnly: 0
   cam: {fileID: 138094}
   cameraAnchor: {fileID: 130520}
   ball: {fileID: 150564, guid: b38b9747d19da524895bca3bb1d0aa41, type: 2}
   muzzle: {fileID: 434638}
   maxSpeed: 10
   accel: 1
-  enableMaxRotationSpeed: 1
+  enableMaxRotationSpeed: 0
   rotSpeed: 360
 --- !u!114 &11453572
 MonoBehaviour:
@@ -430,6 +477,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f543ca5a29b3bc4bb1ea81926448997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scalingFactor: .25
+  smoothing: .100000001
 --- !u!114 &11464732
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -441,7 +490,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 646b5bc27a658f447b1d929fd5ffbd70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 1
+  mode: 0
   showGeneratedNormals: 0
   offsetScale: .200000003
   blurRadius: 18
@@ -574,6 +623,22 @@ Prefab:
       propertyPath: cameraAnchor
       value: 
       objectReference: {fileID: 130520}
+    - target: {fileID: 0}
+      propertyPath: scalingFactor
+      value: .25
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: smoothing
+      value: .100000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: enableMaxRotationSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: editorOnly
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 137624}
