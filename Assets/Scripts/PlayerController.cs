@@ -8,11 +8,15 @@ public class PlayerController : NetworkBehaviour {
 	public GameObject ball;
 	public Transform muzzle;
 
-	public float speed = 2;
+    public float maxSpeed = 10;
+    //public float speed = 2;
+    public float accel = 1;
     public float rotSpeed = 180f;
 
 	Transform thisTransform = null;
 	Rigidbody rb = null;
+
+    Vector3 inputVector;
 
     Vector3 mousePosInWorldSpace;
     float targetYRotation;
@@ -53,16 +57,16 @@ public class PlayerController : NetworkBehaviour {
             //Debug.Log(targetYRotation);
         }
 
-
         Debug.DrawRay(mouseRay.origin, mouseRay.direction * 100, Color.yellow);
-
 
 		if (Input.GetMouseButtonDown(0))
 		{
 			CmdShoot(muzzle.position, thisTransform.rotation);
 		}
 
-
+        //get movement input
+        inputVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        inputVector = Vector3.ClampMagnitude(inputVector, 1f);
     }
 
 	[Command]
@@ -74,6 +78,7 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	void FixedUpdate () {
+        /*
 		if (Input.GetKey("w"))
 		{
 			rb.AddForce(Vector3.forward * speed, ForceMode.Impulse);
@@ -95,8 +100,14 @@ public class PlayerController : NetworkBehaviour {
 		{
 			thisTransform.Rotate(0, 1, 0);
 		}
-
-		Vector3.ClampMagnitude(rb.velocity, 10);
+        */
+        Vector3 influence = (inputVector * maxSpeed - rb.velocity);
+        if (influence.sqrMagnitude > accel*accel)
+        {
+            influence = influence.normalized * accel;
+        }
+        rb.AddForce(influence, ForceMode.VelocityChange);
+		Vector3.ClampMagnitude(rb.velocity, maxSpeed);
 
 		//thisTransform.rotation = Quaternion.Euler(0, targetYRotation, 0);
 		rb.rotation = Quaternion.Euler(0, targetYRotation, 0);
