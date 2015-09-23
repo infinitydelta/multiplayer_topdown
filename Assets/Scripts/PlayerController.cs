@@ -4,6 +4,8 @@ using UnityEngine.Networking;
 
 public class PlayerController : NetworkBehaviour {
 
+	public bool editorOnly = false;
+
 	public GameObject cam;
     public GameObject cameraAnchor;
 	public GameObject bulletTrail;
@@ -31,6 +33,10 @@ public class PlayerController : NetworkBehaviour {
 		rb = GetComponent<Rigidbody>();
 		rb.maxAngularVelocity = 1000;
         playerCamera = cam.GetComponent<Camera>();
+		if (editorOnly)
+		{
+			this.gameObject.SetActive(false);
+		}
 	}
 
 	// Use this for initialization
@@ -77,6 +83,7 @@ public class PlayerController : NetworkBehaviour {
             }
 
 			CmdShootRay(muzzle.position, shootHitPoint, objectHit);
+			CameraShake.cameraShake.startShake();
 		}
 
         //get movement input
@@ -96,36 +103,16 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	void FixedUpdate () {
-        /*
-		if (Input.GetKey("w"))
-		{
-			rb.AddForce(Vector3.forward * speed, ForceMode.Impulse);
-		}
-		if (Input.GetKey("s"))
-		{
-			rb.AddForce(-Vector3.forward * speed, ForceMode.Impulse);
-		}
-		if (Input.GetKey("a"))
-		{
-			rb.AddForce(Vector3.left * speed, ForceMode.Impulse);
-		}
-		if (Input.GetKey("d"))
-		{
-			rb.AddForce(-Vector3.left * speed, ForceMode.Impulse);
-		}
 
-		if (Input.GetKey("left"))
-		{
-			thisTransform.Rotate(0, 1, 0);
-		}
-        */
-        Vector3 influence = (inputVector * maxSpeed - rb.velocity);
+		Vector3 vel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        Vector3 influence = (inputVector * maxSpeed - vel);
         if (influence.sqrMagnitude > accel*accel)
         {
             influence = influence.normalized * accel;
         }
         rb.AddForce(influence, ForceMode.VelocityChange);
-		Vector3.ClampMagnitude(rb.velocity, maxSpeed);
+		rb.velocity = new Vector3(Mathf.Min(rb.velocity.x, maxSpeed), rb.velocity.y, Mathf.Min(rb.velocity.z, maxSpeed));
+		//Vector3.ClampMagnitude(rb.velocity, maxSpeed);
 
 		//thisTransform.rotation = Quaternion.Euler(0, targetYRotation, 0);
         if (enableMaxRotationSpeed)
