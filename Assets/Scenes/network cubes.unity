@@ -297,7 +297,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 450704, guid: b452e0517df45e148a5054c86ecd82e9, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 137624, guid: b452e0517df45e148a5054c86ecd82e9, type: 2}
       propertyPath: m_IsActive
@@ -1092,7 +1092,7 @@ MonoBehaviour:
   m_OfflineScene: 
   m_OnlineScene: 
   m_SpawnPrefabs:
-  - {fileID: 150564, guid: b38b9747d19da524895bca3bb1d0aa41, type: 2}
+  - {fileID: 183186, guid: feba477898c86944faacad557996fd43, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -1114,7 +1114,7 @@ MonoBehaviour:
     m_MaxSentMessageQueueSize: 128
     m_IsAcksLong: 0
     m_Channels: []
-  m_Channels: 
+  m_Channels: 0500000000000000
   m_UseSimulator: 0
   m_SimulatedLatency: 1
   m_PacketLossPercentage: 0

@@ -413,7 +413,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 138094}
   cameraAnchor: {fileID: 130520}
-  ball: {fileID: 150564, guid: b38b9747d19da524895bca3bb1d0aa41, type: 2}
+  bulletTrail: {fileID: 183186, guid: feba477898c86944faacad557996fd43, type: 2}
   muzzle: {fileID: 434638}
   maxSpeed: 10
   accel: 1
@@ -574,6 +574,10 @@ Prefab:
       propertyPath: cameraAnchor
       value: 
       objectReference: {fileID: 130520}
+    - target: {fileID: 0}
+      propertyPath: bulletTrail
+      value: 
+      objectReference: {fileID: 183186, guid: feba477898c86944faacad557996fd43, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 137624}

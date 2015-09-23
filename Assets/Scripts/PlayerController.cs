@@ -6,7 +6,7 @@ public class PlayerController : NetworkBehaviour {
 
 	public GameObject cam;
     public GameObject cameraAnchor;
-	public GameObject ball;
+	public GameObject bulletTrail;
 	public Transform muzzle;
 
     public float maxSpeed = 10;
@@ -64,9 +64,19 @@ public class PlayerController : NetworkBehaviour {
 
         Debug.DrawRay(mouseRay.origin, mouseRay.direction * 100, Color.yellow);
 
+        //shoot
 		if (Input.GetMouseButtonDown(0))
 		{
-			CmdShoot(muzzle.position, thisTransform.rotation);
+            Vector3 shootHitPoint = muzzle.position + (100f * thisTransform.right);
+            GameObject objectHit = null;
+            RaycastHit shoot;
+            if(Physics.Raycast(muzzle.position, thisTransform.right, out shoot, 100f))
+            {
+                shootHitPoint = shoot.point;
+                objectHit = shoot.collider.gameObject;
+            }
+
+			CmdShootRay(muzzle.position, shootHitPoint, objectHit);
 		}
 
         //get movement input
@@ -76,11 +86,13 @@ public class PlayerController : NetworkBehaviour {
     }
 
 	[Command]
-	void CmdShoot(Vector3 pos, Quaternion rot)
+	void CmdShootRay(Vector3 rayStart, Vector3 rayEnd, GameObject hit)
 	{
-		GameObject bullet = Instantiate(ball, pos, rot) as GameObject;
-
-		NetworkServer.Spawn(bullet);
+        GameObject bTrail = (GameObject)(Instantiate(bulletTrail));
+        BulletTrail bt = bTrail.GetComponent<BulletTrail>();
+       
+		NetworkServer.Spawn(bTrail);
+        bt.RpcSetStartEnd(rayStart, rayEnd);
 	}
 
 	void FixedUpdate () {
