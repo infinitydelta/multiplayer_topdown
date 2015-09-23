@@ -72,6 +72,7 @@ public class PlayerController : NetworkBehaviour {
 
 		if (Input.GetMouseButtonDown(0))
 		{
+			CameraShake.cameraShake.startShake();
 			CmdShoot(muzzle.position, thisTransform.rotation);
 		}
 
@@ -90,29 +91,7 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	void FixedUpdate () {
-		/*
-		if (Input.GetKey("w"))
-		{
-			rb.AddForce(Vector3.forward * speed, ForceMode.Impulse);
-		}
-		if (Input.GetKey("s"))
-		{
-			rb.AddForce(-Vector3.forward * speed, ForceMode.Impulse);
-		}
-		if (Input.GetKey("a"))
-		{
-			rb.AddForce(Vector3.left * speed, ForceMode.Impulse);
-		}
-		if (Input.GetKey("d"))
-		{
-			rb.AddForce(-Vector3.left * speed, ForceMode.Impulse);
-		}
 
-		if (Input.GetKey("left"))
-		{
-			thisTransform.Rotate(0, 1, 0);
-		}
-        */
 		Vector3 vel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         Vector3 influence = (inputVector * maxSpeed - vel);
         if (influence.sqrMagnitude > accel*accel)
