@@ -166,7 +166,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 137624}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.0999999, y: 1.5, z: 8.39999962}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 422494}
@@ -460,7 +460,7 @@ MonoBehaviour:
   editorOnly: 0
   cam: {fileID: 138094}
   cameraAnchor: {fileID: 130520}
-  ball: {fileID: 150564, guid: b38b9747d19da524895bca3bb1d0aa41, type: 2}
+  bulletTrail: {fileID: 183186, guid: feba477898c86944faacad557996fd43, type: 2}
   muzzle: {fileID: 434638}
   maxSpeed: 10
   accel: 1
@@ -565,7 +565,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LocalPosition.y
-      value: 3
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LocalPosition.z
