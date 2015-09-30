@@ -166,7 +166,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 137624}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalPosition: {x: -22.3221207, y: 37.8066177, z: -13.797802}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 422494}
@@ -464,8 +464,8 @@ MonoBehaviour:
   muzzle: {fileID: 434638}
   maxSpeed: 10
   accel: 1
-  enableMaxRotationSpeed: 0
-  rotSpeed: 360
+  enableMaxRotationSpeed: 1
+  rotSpeed: 720
 --- !u!114 &11453572
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -478,6 +478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scalingFactor: .25
+  aimingFactor: 2
   smoothing: .100000001
 --- !u!114 &11464732
 MonoBehaviour:
@@ -633,7 +634,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: enableMaxRotationSpeed
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: editorOnly

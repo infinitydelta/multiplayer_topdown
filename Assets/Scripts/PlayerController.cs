@@ -18,9 +18,11 @@ public class PlayerController : NetworkBehaviour {
     public float rotSpeed = 360f;
 
 	Transform thisTransform = null;
-	Rigidbody rb = null;
+    Rigidbody rb = null;
 
     Vector3 inputVector;
+    float relMoveScaleFactor;
+    bool aiming;
 
     Vector3 mousePosInWorldSpace;
     float targetYRotation;
@@ -54,7 +56,7 @@ public class PlayerController : NetworkBehaviour {
 	// Update is called once per frame
     void Update()
     {
-        //mousePosInWorldSpace = playerCamera
+        //raycast the mouse position in screenspace from the camera to find where on the floor the mouse is over in worldspace
         Ray mouseRay = playerCamera.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
         RaycastHit hit;
         int layermask = 1 << 8; //only hit layer 8 (Floor)
@@ -70,6 +72,7 @@ public class PlayerController : NetworkBehaviour {
 
         Debug.DrawRay(mouseRay.origin, mouseRay.direction * 100, Color.yellow);
 
+
         //shoot
 		if (Input.GetMouseButtonDown(0))
 		{
@@ -82,13 +85,30 @@ public class PlayerController : NetworkBehaviour {
                 objectHit = shoot.collider.gameObject;
             }
 
-			CmdShootRay(muzzle.position, shootHitPoint, objectHit);
+			CmdShootRay(muzzle.position, shootHitPoint, objectHit); //Call on Server
 			CameraShake.cameraShake.startShake();
 		}
+        //aim
+        if(Input.GetMouseButtonDown(1))
+        {
+            aiming = true;
+        }
+        if(Input.GetMouseButtonUp(1))
+        {
+            aiming = false;
+        }
 
         //get movement input
         inputVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        inputVector = Vector3.ClampMagnitude(inputVector, 1f);
+        inputVector = Vector3.ClampMagnitude(inputVector, 1f); //inputVector.Normalize();
+
+        //movement scaling factor based on angle between movement input and direction facing
+        float currentRot = thisTransform.rotation.eulerAngles.y;
+        float movementRot = Mathf.Atan2(-inputVector.z, inputVector.x)*Mathf.Rad2Deg;
+        Debug.DrawLine(thisTransform.position, thisTransform.position + inputVector, Color.blue);
+        //Debug.Log(currentRot - movementRot);
+        relMoveScaleFactor = 0.5f + 0.5f * Mathf.Cos((currentRot - movementRot) * Mathf.Deg2Rad); //normalized to 0-1
+        //Debug.Log(relMoveScaleFactor);
 
     }
 
@@ -99,7 +119,7 @@ public class PlayerController : NetworkBehaviour {
         BulletTrail bt = bTrail.GetComponent<BulletTrail>();
        
 		NetworkServer.Spawn(bTrail);
-        bt.RpcSetStartEnd(rayStart, rayEnd);
+        bt.RpcSetStartEnd(rayStart, rayEnd); //Call on all clients
 	}
 
 	void FixedUpdate () {
@@ -108,10 +128,15 @@ public class PlayerController : NetworkBehaviour {
         Vector3 influence = (inputVector * maxSpeed - vel);
         if (influence.sqrMagnitude > accel*accel)
         {
-            influence = influence.normalized * accel;
+            influence = influence.normalized * accel; 
         }
         rb.AddForce(influence, ForceMode.VelocityChange);
-		rb.velocity = new Vector3(Mathf.Min(rb.velocity.x, maxSpeed), rb.velocity.y, Mathf.Min(rb.velocity.z, maxSpeed));
+        float moveScale = 0.5f + 0.5f * relMoveScaleFactor; //50% move speed when facing opposite direction
+        if(aiming)
+        {
+            moveScale *= 0.5f; //50% move speed when aiming
+        }
+        rb.velocity = new Vector3((rb.velocity.x > 0? Mathf.Min(rb.velocity.x, maxSpeed * moveScale): Mathf.Max(rb.velocity.x, -1 * maxSpeed * moveScale)), rb.velocity.y, (rb.velocity.z > 0? Mathf.Min(rb.velocity.z, maxSpeed * moveScale): Mathf.Max(rb.velocity.z, -1 * maxSpeed * moveScale)));
 		//Vector3.ClampMagnitude(rb.velocity, maxSpeed);
 
 		//thisTransform.rotation = Quaternion.Euler(0, targetYRotation, 0);
@@ -133,6 +158,10 @@ public class PlayerController : NetworkBehaviour {
     public Vector3 getMousePosInWorldSpace()
     {
         return mousePosInWorldSpace;
+    }
+    public bool isAiming()
+    {
+        return aiming;
     }
 
 

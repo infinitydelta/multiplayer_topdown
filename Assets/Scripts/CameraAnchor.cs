@@ -4,6 +4,7 @@ using System.Collections;
 public class CameraAnchor : MonoBehaviour {
 
 	public float scalingFactor = 0.25f; //0 = follow player
+    public float aimingFactor = 2f;
 	public float smoothing = 0.1f; //1 = no smoothing
 
 	Transform thisTransform = null;
@@ -26,7 +27,7 @@ public class CameraAnchor : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		//thisTransform.position = playerTransform.position;
-        targetPos = playerTransform.position + ((playerController.getMousePosInWorldSpace() - playerTransform.position) * scalingFactor);
+        targetPos = playerTransform.position + ((playerController.getMousePosInWorldSpace() - playerTransform.position) * scalingFactor * (playerController.isAiming()? aimingFactor: 1));
 		//thisTransform.position = new Vector3(Mathf.Lerp(thisTransform.position.x, targetPos.x, smoothing), Mathf.Lerp(thisTransform.position.y, targetPos.y, smoothing), Mathf.Lerp(thisTransform.position.z, targetPos.z, smoothing));
 		thisTransform.position  = Vector3.Lerp(thisTransform.position, targetPos, smoothing);
 	}
