@@ -28,6 +28,11 @@ public class PlayerController : NetworkBehaviour {
     float targetYRotation;
     Vector3 targetRotVector;
     Camera playerCamera;
+    Canvas canvas;
+    PlayerInventory playerInventory;
+    bool holding = false;
+
+    public InventoryItem item;
 
 	void Awake()
 	{
@@ -35,6 +40,8 @@ public class PlayerController : NetworkBehaviour {
 		rb = GetComponent<Rigidbody>();
 		rb.maxAngularVelocity = 1000;
         playerCamera = cam.GetComponent<Camera>();
+        playerInventory = GetComponent<PlayerInventory>();
+        canvas = thisTransform.FindChild("Canvas").GetComponent<Canvas>();
 		if (editorOnly)
 		{
 			this.gameObject.SetActive(false);
@@ -48,8 +55,13 @@ public class PlayerController : NetworkBehaviour {
 			playerCamera.enabled = false;
 			cam.SetActive(false);
 			this.enabled = false;
-
+            canvas.enabled = false;
 		}
+        else
+        {
+            canvas.transform.parent = null;
+            canvas.transform.position = Vector3.zero;
+        }
         thisTransform.Translate(new Vector3(0, 2, 0));
 	}
 	
@@ -74,7 +86,7 @@ public class PlayerController : NetworkBehaviour {
 
 
         //shoot
-		if (Input.GetMouseButtonDown(0))
+		if (Input.GetButtonDown("Fire"))
 		{
             Vector3 shootHitPoint = muzzle.position + (100f * thisTransform.right);
             GameObject objectHit = null;
@@ -89,11 +101,11 @@ public class PlayerController : NetworkBehaviour {
 			CameraShake.cameraShake.startShake();
 		}
         //aim
-        if(Input.GetMouseButtonDown(1))
+        if(Input.GetButtonDown("Aim"))
         {
             aiming = true;
         }
-        if(Input.GetMouseButtonUp(1))
+        if(Input.GetButtonUp("Aim"))
         {
             aiming = false;
         }
@@ -110,6 +122,49 @@ public class PlayerController : NetworkBehaviour {
         relMoveScaleFactor = 0.5f + 0.5f * Mathf.Cos((currentRot - movementRot) * Mathf.Deg2Rad); //normalized to 0-1
         //Debug.Log(relMoveScaleFactor);
 
+        //inventory input
+        if(Input.GetButtonDown("Inventory Up") || Input.GetAxisRaw("Mouse ScrollWheel") > 0)
+        {
+            if(holding)
+            {
+                playerInventory.shiftUp();
+            }
+            else
+            {
+                playerInventory.selectUp();
+            }
+        }
+        if (Input.GetButtonDown("Inventory Down") || Input.GetAxisRaw("Mouse ScrollWheel") < 0)
+        {
+            if(holding)
+            {
+                playerInventory.shiftDown();
+            }
+            else
+            {
+                playerInventory.selectDown();
+            }
+        }
+        if(Input.GetButtonDown("Inventory Hold"))
+        {
+            holding = true;
+        }
+        if(Input.GetButtonUp("Inventory Hold"))
+        {
+            holding = false;
+        }
+        if(Input.GetButtonDown("Inventory Throw"))
+        {
+            playerInventory.drop();
+        }
+        if(Input.GetButtonDown("Interact"))
+        {
+            if(item != null)
+            {
+                playerInventory.pickUp(item);
+                item = null;
+            }
+        }
     }
 
 	[Command]
@@ -117,6 +172,15 @@ public class PlayerController : NetworkBehaviour {
 	{
         GameObject bTrail = (GameObject)(Instantiate(bulletTrail));
         BulletTrail bt = bTrail.GetComponent<BulletTrail>();
+
+        if (hit != null)
+        {
+            Rigidbody hitrb = hit.GetComponent<Rigidbody>();
+            if (hitrb != null)
+            {
+                hitrb.AddForce((rayEnd - rayStart).normalized * 5f, ForceMode.Impulse);
+            }
+        }
        
 		NetworkServer.Spawn(bTrail);
         bt.RpcSetStartEnd(rayStart, rayEnd); //Call on all clients
