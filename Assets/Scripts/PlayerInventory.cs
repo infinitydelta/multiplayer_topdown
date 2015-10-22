@@ -12,9 +12,12 @@ public class PlayerInventory : NetworkBehaviour
     public Text guitext;
 
     Transform thisTransform;
+    PlayerController owner;
 
     int currentlySelectedIndex;
     int maxInventorySize = 5;
+
+    int currentlySelectedWeaponAmmoIndex;
 
 	// Use this for initialization
     void Awake()
@@ -26,6 +29,7 @@ public class PlayerInventory : NetworkBehaviour
         playerItems = new Queue<InventoryItem>[maxInventorySize];
         thisTransform = this.GetComponent<Transform>();
         currentlySelectedIndex = 0;
+        owner = GetComponent<PlayerController>();
         updateText();
 	
 	}
@@ -67,8 +71,24 @@ public class PlayerInventory : NetworkBehaviour
         {
             InventoryItem newItem = playerItems[currentlySelectedIndex].Peek();
             CmdShowItem(newItem.gameObject);
+            Weapon weapon = newItem.GetComponent<Weapon>();
+            owner.weaponInHand = weapon;
+            if(weapon != null)
+            {
+                //calculate amount of ammo carrying
+                int amt = 0;
+                currentlySelectedWeaponAmmoIndex = -1;
+                for(int x = 0; x < maxInventorySize; x++)
+                {
+                    if(playerItems[x] != null && playerItems[x].Peek().itemName.Equals(weapon.ammotype))
+                    {
+                        amt += playerItems[x].Count;
+                        currentlySelectedWeaponAmmoIndex = x;
+                    }
+                }
+                weapon.currentammototal = amt;
+            }
         }
-        //set position?
         updateText();
         
     }
@@ -142,12 +162,17 @@ public class PlayerInventory : NetworkBehaviour
     }
     public bool pickUp(InventoryItem item)
     {
-        for (int i = 0; i < maxInventorySize; i++)
+		HUDscript.hidePickUpText();
+
+
+		for (int i = 0; i < maxInventorySize; i++)
         {
             if(playerItems[i] != null && playerItems[i].Peek().itemName.Equals(item.itemName) && playerItems[i].Count < item.maxStack) //already have one in inventory, not at max stack
             {
+                item.inInventory = true;
                 playerItems[i].Enqueue(item);
                 CmdPickUpItem(item.gameObject);
+                selectIndex(currentlySelectedIndex);
                 updateText();
                 return true;
             }
@@ -156,6 +181,7 @@ public class PlayerInventory : NetworkBehaviour
         {
             if(playerItems[i] == null) //empty spot
             {
+                item.inInventory = true;
                 playerItems[i] = new Queue<InventoryItem>();
                 playerItems[i].Enqueue(item);
                 CmdPickUpItem(item.gameObject);
@@ -164,7 +190,7 @@ public class PlayerInventory : NetworkBehaviour
                 return true;
             }
         }
-            return false;
+        return false;
     }
     [Command]
     public void CmdPickUpItem(GameObject item)
@@ -189,7 +215,7 @@ public class PlayerInventory : NetworkBehaviour
         {
             return;
         }
-        ii.RpcSetTransform(this.transform.position + thisTransform.right * 2f, thisTransform.rotation, ii.transform.localScale);
+        ii.RpcSetTransform(location.position + thisTransform.right * 2f, thisTransform.rotation, ii.transform.localScale);
         ii.RpcParent(null);
         ii.RpcRigidbodyKinematic(false);
         ii.RpcInInventory(false);
@@ -243,5 +269,46 @@ public class PlayerInventory : NetworkBehaviour
             text += "\n";
         }
         guitext.text = text;
+    }
+
+    public void fireWeapon()
+    {
+        if(currentlySelectedWeaponAmmoIndex > -1) //sanity check
+        {
+            InventoryItem toDestroy = playerItems[currentlySelectedWeaponAmmoIndex].Dequeue();
+            string ammoname = toDestroy.itemName;
+            if(playerItems[currentlySelectedWeaponAmmoIndex].Count == 0) //last one in slot, change index if possible
+            {
+                playerItems[currentlySelectedWeaponAmmoIndex] = null;
+                currentlySelectedWeaponAmmoIndex = -1;
+                for(int x = 0; x < maxInventorySize; x++)
+                {
+                    if(playerItems[x] != null && playerItems[x].Peek().itemName.Equals(ammoname))
+                    {
+                        currentlySelectedWeaponAmmoIndex = x;
+                    }
+                }
+            }
+            //destroy the used ammo object;
+            CmdDestroyItem(toDestroy.gameObject);
+        }
+        updateText();
+    }
+    [Command]
+    public void CmdDestroyItem(GameObject item)
+    {
+        item.GetComponent<InventoryItem>().RpcDestroySelf();
+    }
+    public int Contains(string itemname)
+    {
+        int output = 0;
+        for (int x = 0; x < maxInventorySize; x++)
+        {
+            if(playerItems[x] != null && playerItems[x].Peek().itemName.Equals(itemname))
+            {
+                output += playerItems[x].Count;
+            }
+        }
+        return output;
     }
 }

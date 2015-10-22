@@ -6,10 +6,11 @@ public class InventoryItem : NetworkBehaviour
 {
     public string itemName = "item";
     public int maxStack = 1;
+    public int currentStack = 1;
     public bool consumable = false;
 
-    [SyncVar]
-    bool inInventory = false;
+    //[SyncVar]
+    public bool inInventory = false;
 
 	// Use this for initialization
 	void Start () {
@@ -21,22 +22,25 @@ public class InventoryItem : NetworkBehaviour
 	
 	}
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
-        if(!inInventory && other.CompareTag("Player"))
+        if(!inInventory && other.CompareTag("Player") && other.GetComponent<PlayerController>().isLocalPlayer)
         {
-            other.GetComponent<PlayerController>().item = this;
+            other.GetComponent<PlayerController>().itemToPickUp = this;
+			HUDscript.showPickUpText(transform.position, itemName);
         }
     }
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            if(other.GetComponent<PlayerController>().item == this)
+            if(other.GetComponent<PlayerController>().itemToPickUp == this)
             {
-                other.GetComponent<PlayerController>().item = null;
-            }
-        }
+                other.GetComponent<PlayerController>().itemToPickUp = null;
+				HUDscript.hidePickUpText();
+
+			}
+		}
     }
     [ClientRpc]
     public void RpcInInventory(bool val)
@@ -86,5 +90,10 @@ public class InventoryItem : NetworkBehaviour
         {
             c.enabled = enabled;
         }
+    }
+    [ClientRpc]
+    public void RpcDestroySelf()
+    {
+        Destroy(this.gameObject);
     }
 }

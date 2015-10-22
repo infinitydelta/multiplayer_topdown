@@ -1,0 +1,152 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1011 &101100000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: legs Avatar Mask
+  m_Mask: 01000000000000000000000001000000010000000000000000000000000000000000000001000000010000000000000000000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: hip
+    m_Weight: 1
+  - m_Path: hip/hip_main
+    m_Weight: 1
+  - m_Path: hip/hip_main/hip_armor
+    m_Weight: 1
+  - m_Path: hip/hip_main/hip_armor/pCube20
+    m_Weight: 1
+  - m_Path: hip/hip_main/hip_armor/pCube22
+    m_Weight: 1
+  - m_Path: hip/hip_main/hip_armor/pCube23
+    m_Weight: 1
+  - m_Path: hip/hip_main/hip_armor/pCube28
+    m_Weight: 1
+  - m_Path: hip/left_upper_leg
+    m_Weight: 1
+  - m_Path: hip/left_upper_leg/left_lower_leg
+    m_Weight: 1
+  - m_Path: hip/left_upper_leg/left_lower_leg/left_ankle
+    m_Weight: 1
+  - m_Path: hip/left_upper_leg/left_lower_leg/left_ankle/left_toe
+    m_Weight: 1
+  - m_Path: hip/left_upper_leg/left_lower_leg/left_ankle/pCube27
+    m_Weight: 1
+  - m_Path: hip/left_upper_leg/left_lower_leg/pCube25
+    m_Weight: 1
+  - m_Path: hip/left_upper_leg/left_lower_leg/pCube25/pCube26
+    m_Weight: 1
+  - m_Path: hip/left_upper_leg/pCube24
+    m_Weight: 1
+  - m_Path: hip/right_upper_leg
+    m_Weight: 1
+  - m_Path: hip/right_upper_leg/pCube24 1
+    m_Weight: 1
+  - m_Path: hip/right_upper_leg/right_lower_leg
+    m_Weight: 1
+  - m_Path: hip/right_upper_leg/right_lower_leg/pCube25 1
+    m_Weight: 1
+  - m_Path: hip/right_upper_leg/right_lower_leg/pCube25 1/pCube26 1
+    m_Weight: 1
+  - m_Path: hip/right_upper_leg/right_lower_leg/right_ankle
+    m_Weight: 1
+  - m_Path: hip/right_upper_leg/right_lower_leg/right_ankle/pCube27 1
+    m_Weight: 1
+  - m_Path: hip/right_upper_leg/right_lower_leg/right_ankle/right_toe
+    m_Weight: 1
+  - m_Path: hip/spine_0
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/left_lower_arm
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/left_lower_arm/left_hand
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/left_lower_arm/left_hand/pCube6
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/left_lower_arm/left_hand/pCube6/pCube5
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/left_lower_arm/left_hand/pCube6/pCube7
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/left_lower_arm/left_hand/pCube6/pCube8
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/left_lower_arm/left_hand/pCube6/pCube9
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/left_lower_arm/left_hand/pCube6/pCube10
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/left_lower_arm/left_hand/pCube6/pCube11
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/left_lower_arm/pCube3
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/left_lower_arm/pCube3/pCube4
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/pCube1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/left_upper_arm/pCube1/pCube2
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/neck
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/neck/head
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/neck/head/head 1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/pCube1 1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/pCube1 1/pCube2 1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/right_lower_arm
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/right_lower_arm/pCube3 1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/right_lower_arm/pCube3 1/pCube4
+      1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/right_lower_arm/right_hand
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/right_lower_arm/right_hand/pCube6
+      1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/right_lower_arm/right_hand/pCube6
+      1/pCube5 1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/right_lower_arm/right_hand/pCube6
+      1/pCube7 1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/right_lower_arm/right_hand/pCube6
+      1/pCube8 1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/right_lower_arm/right_hand/pCube6
+      1/pCube9 1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/right_lower_arm/right_hand/pCube6
+      1/pCube10 1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/spine_2/right_upper_arm/right_lower_arm/right_hand/pCube6
+      1/pCube11 1
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/torso_main
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/torso_main/torso_armor
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/torso_main/torso_armor/pCube13
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/torso_main/torso_armor/pCube14
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/torso_main/torso_armor/pCube15
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/torso_main/torso_armor/pCube16
+    m_Weight: 1
+  - m_Path: hip/spine_0/spine_1/torso_main/torso_armor/pCube29
+    m_Weight: 1
+  - m_Path: hip/spine_0/stomach_main
+    m_Weight: 1
+  - m_Path: hip/spine_0/stomach_main/stomach_armor
+    m_Weight: 1

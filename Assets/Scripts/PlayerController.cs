@@ -11,8 +11,10 @@ public class PlayerController : NetworkBehaviour {
 	public GameObject bulletTrail;
 	public Transform muzzle;
 
+	GameObject playerSpawn;
+
     public float maxSpeed = 10;
-    //public float speed = 2;
+    public float curSpeed = 0;
     public float accel = 1;
     public bool enableMaxRotationSpeed = true;
     public float rotSpeed = 360f;
@@ -32,7 +34,14 @@ public class PlayerController : NetworkBehaviour {
     PlayerInventory playerInventory;
     bool holding = false;
 
-    public InventoryItem item;
+    public InventoryItem itemToPickUp;
+    public Weapon weaponInHand;
+
+	//animator
+	Animator anim;
+
+    int health = 100;
+    int maxhealth = 100;
 
 	void Awake()
 	{
@@ -42,10 +51,8 @@ public class PlayerController : NetworkBehaviour {
         playerCamera = cam.GetComponent<Camera>();
         playerInventory = GetComponent<PlayerInventory>();
         canvas = thisTransform.FindChild("Canvas").GetComponent<Canvas>();
-		if (editorOnly)
-		{
-			this.gameObject.SetActive(false);
-		}
+		anim = GetComponentInChildren<Animator>();
+
 	}
 
 	// Use this for initialization
@@ -54,7 +61,9 @@ public class PlayerController : NetworkBehaviour {
 		{
 			playerCamera.enabled = false;
 			cam.SetActive(false);
+			Destroy(cam.GetComponent<CameraShake>());
 			this.enabled = false;
+			GetComponent<PlayerNetwork>().enabled = true;
             canvas.enabled = false;
 		}
         else
@@ -62,7 +71,13 @@ public class PlayerController : NetworkBehaviour {
             canvas.transform.parent = null;
             canvas.transform.position = Vector3.zero;
         }
+		playerSpawn = GameObject.Find("PlayerSpawn");
+		thisTransform.position = playerSpawn.transform.position;
         thisTransform.Translate(new Vector3(0, 2, 0));
+		if (editorOnly)
+		{
+			this.gameObject.SetActive(false);
+		}
 	}
 	
 	// Update is called once per frame
@@ -86,20 +101,26 @@ public class PlayerController : NetworkBehaviour {
 
 
         //shoot
-		if (Input.GetButtonDown("Fire"))
+		if (Input.GetButton("Fire"))
 		{
-            Vector3 shootHitPoint = muzzle.position + (100f * thisTransform.right);
-            GameObject objectHit = null;
-            RaycastHit shoot;
-            if(Physics.Raycast(muzzle.position, thisTransform.right, out shoot, 100f))
+            if(weaponInHand != null) //has a weapon, try to fire it
             {
-                shootHitPoint = shoot.point;
-                objectHit = shoot.collider.gameObject;
-            }
+                if(weaponInHand.fire()) //weapon says can fire, fire
+                {
+                    playerInventory.fireWeapon();
 
-			CmdShootRay(muzzle.position, shootHitPoint, objectHit); //Call on Server
-			CameraShake.cameraShake.startShake();
+                    fireRaycast();
+                    
+                }
+            }
 		}
+        if(Input.GetButtonUp("Fire"))
+        {
+            if(weaponInHand != null)
+            {
+                weaponInHand.release();
+            }
+        }
         //aim
         if(Input.GetButtonDown("Aim"))
         {
@@ -159,16 +180,16 @@ public class PlayerController : NetworkBehaviour {
         }
         if(Input.GetButtonDown("Interact"))
         {
-            if(item != null)
+            if(itemToPickUp != null)
             {
-                playerInventory.pickUp(item);
-                item = null;
+                playerInventory.pickUp(itemToPickUp);
+                itemToPickUp = null;
             }
         }
     }
 
 	[Command]
-	void CmdShootRay(Vector3 rayStart, Vector3 rayEnd, GameObject hit)
+	void CmdShootRay(Vector3 rayStart, Vector3 rayEnd, GameObject hit, int damage, float force)
 	{
         GameObject bTrail = (GameObject)(Instantiate(bulletTrail));
         BulletTrail bt = bTrail.GetComponent<BulletTrail>();
@@ -178,7 +199,15 @@ public class PlayerController : NetworkBehaviour {
             Rigidbody hitrb = hit.GetComponent<Rigidbody>();
             if (hitrb != null)
             {
-                hitrb.AddForce((rayEnd - rayStart).normalized * 5f, ForceMode.Impulse);
+                hitrb.AddForce((rayEnd - rayStart).normalized * force, ForceMode.Impulse);
+            }
+            if(hit.CompareTag("Player")) //shot a player
+            {
+                hit.GetComponent<PlayerController>().RpcTakeDamage(damage);
+            }
+            if(hit.CompareTag("Enemy")) //shot an enemy
+            {
+                hit.GetComponent<Enemy>().RpcTakeDamage(damage);
             }
         }
        
@@ -201,6 +230,8 @@ public class PlayerController : NetworkBehaviour {
             moveScale *= 0.5f; //50% move speed when aiming
         }
         rb.velocity = new Vector3((rb.velocity.x > 0? Mathf.Min(rb.velocity.x, maxSpeed * moveScale): Mathf.Max(rb.velocity.x, -1 * maxSpeed * moveScale)), rb.velocity.y, (rb.velocity.z > 0? Mathf.Min(rb.velocity.z, maxSpeed * moveScale): Mathf.Max(rb.velocity.z, -1 * maxSpeed * moveScale)));
+		curSpeed = (rb.velocity.magnitude);
+		anim.SetFloat("Forward", curSpeed);
 		//Vector3.ClampMagnitude(rb.velocity, maxSpeed);
 
 		//thisTransform.rotation = Quaternion.Euler(0, targetYRotation, 0);
@@ -227,6 +258,30 @@ public class PlayerController : NetworkBehaviour {
     {
         return aiming;
     }
+    [ClientRpc]
+    public void RpcTakeDamage(int damage)
+    {
+        health -= damage;
+        if(health <= 0)
+        {
+            Debug.Log("Dead");
+            rb.freezeRotation = false;
+            GetComponent<PlayerNetwork>().enabled = false;
+            this.enabled = false;
+        }
+    }
+    private void fireRaycast()
+    {
+        Vector3 shootHitPoint = muzzle.position + (100f * thisTransform.right);
+        GameObject objectHit = null;
+        RaycastHit shoot;
+        if (Physics.Raycast(muzzle.position, thisTransform.right, out shoot, 100f))
+        {
+            shootHitPoint = shoot.point;
+            objectHit = shoot.collider.gameObject;
+        }
 
-
+        CmdShootRay(muzzle.position, shootHitPoint, objectHit, weaponInHand.damage, weaponInHand.force); //Call on Server
+        CameraShake.cameraShake.startShake();
+    }
 }
